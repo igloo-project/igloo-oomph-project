@@ -1,1 +1,638 @@
-../org.iglooproject.eclipse.project.setup
+<?xml version="1.0" encoding="UTF-8"?>
+<setup:Project
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
+    xmlns:jdt="http://www.eclipse.org/oomph/setup/jdt/1.0"
+    xmlns:maven="http://www.eclipse.org/oomph/setup/maven/1.0"
+    xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/maven/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Maven.ecore"
+    name="org.iglooproject.eclipse.project"
+    label="Igloo project import">
+  <setupTask
+      xsi:type="setup:CompoundTask"
+      id="group.variables"
+      name="Variables">
+    <setupTask
+        xsi:type="setup:VariableTask"
+        name="git.project.name"
+        storageURI="scope://Workspace"
+        label="Git project name">
+      <description>This is the last part in the git url (e.g. *project* for *git@github.com:igloo-project/my-project.git*)</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        name="repository.choice"
+        defaultValue="git@github.com:igloo-project/$${git.project.name}.git"
+        storageURI="scope://Workspace"
+        label="Git URL">
+      <description>Full Git URL, e.g. git@github.com:igloo-project/my-project.git</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        name="git.clone.name"
+        defaultValue="${git.project.name}"
+        storageURI="scope://Workspace"
+        label="Clone folder name">
+      <description>e.g. my-project; change it if you want to manage several clone of the same project, or if there is a name conflict</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        name="maven.project.name"
+        defaultValue="$${git.project.name}"
+        storageURI="scope://Workspace"
+        label="Maven root artifactId">
+      <description>Overrides this if the root artifactId is not the git repository name</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        name="git.clone.branch"
+        defaultValue="master"
+        storageURI="scope://Workspace"
+        label="Targetted git branch">
+      <description>This branch is used only when repository is cloned; existing clone is not switched</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        name="webapp.name"
+        defaultValue="$${maven.project.name}-webapp"
+        storageURI="scope://Workspace"
+        label="Webapp artifactId">
+      <description>Override this if your webapp artifactId is not named &lt;root artifactId>-webapp</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        name="igloo.tomcat.version"
+        defaultValue="9.0"
+        storageURI="scope://Workspace"
+        label="Tomcat version">
+      <choice
+          value="8.5"
+          label="8.5"/>
+      <choice
+          value="9.0"
+          label="9.0"/>
+      <description>Tomcat version (for WST servers initialization)</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:CompoundTask"
+        name="igloo.tomcat.versions">
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          filter=""
+          name="igloo.tomcat.85">
+        <setupTask
+            xsi:type="setup:VariableTask"
+            filter=""
+            name="igloo.tomcat.85.location"
+            value="$${user.home}/Documents/apps/apache-tomcat-85"
+            defaultValue="">
+          <description>Default server.xml, extracted from tomcat installation, with &lt;Context... /> added for webapp initialization</description>
+        </setupTask>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.85.version.id"
+            value="85"/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.85.version"
+            value="8.5"/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.85.runtime.id"
+            value="Apache Tomcat v8.5"/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.85.server.id"
+            value="tomcat85"/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            type="TEXT"
+            name="igloo.tomcat.85.server_xml"
+            value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;!--&#xA;  Licensed to the Apache Software Foundation (ASF) under one or more&#xA;  contributor license agreements.  See the NOTICE file distributed with&#xA;  this work for additional information regarding copyright ownership.&#xA;  The ASF licenses this file to You under the Apache License, Version 2.0&#xA;  (the &quot;License&quot;); you may not use this file except in compliance with&#xA;  the License.  You may obtain a copy of the License at&#xA;&#xA;      http://www.apache.org/licenses/LICENSE-2.0&#xA;&#xA;  Unless required by applicable law or agreed to in writing, software&#xA;  distributed under the License is distributed on an &quot;AS IS&quot; BASIS,&#xA;  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.&#xA;  See the License for the specific language governing permissions and&#xA;  limitations under the License.&#xA;-->&#xA;&lt;!-- Note:  A &quot;Server&quot; is not itself a &quot;Container&quot;, so you may not&#xA;     define subcomponents such as &quot;Valves&quot; at this level.&#xA;     Documentation at /docs/config/server.html&#xA; -->&#xA;&lt;Server port=&quot;8005&quot; shutdown=&quot;SHUTDOWN&quot;>&#xA;  &lt;Listener className=&quot;org.apache.catalina.startup.VersionLoggerListener&quot; />&#xA;  &lt;!-- Security listener. Documentation at /docs/config/listeners.html&#xA;  &lt;Listener className=&quot;org.apache.catalina.security.SecurityListener&quot; />&#xA;  -->&#xA;  &lt;!--APR library loader. Documentation at /docs/apr.html -->&#xA;  &lt;Listener className=&quot;org.apache.catalina.core.AprLifecycleListener&quot; SSLEngine=&quot;on&quot; />&#xA;  &lt;!-- Prevent memory leaks due to use of particular java/javax APIs-->&#xA;  &lt;Listener className=&quot;org.apache.catalina.core.JreMemoryLeakPreventionListener&quot; />&#xA;  &lt;Listener className=&quot;org.apache.catalina.mbeans.GlobalResourcesLifecycleListener&quot; />&#xA;  &lt;Listener className=&quot;org.apache.catalina.core.ThreadLocalLeakPreventionListener&quot; />&#xA;&#xA;  &lt;!-- Global JNDI resources&#xA;       Documentation at /docs/jndi-resources-howto.html&#xA;  -->&#xA;  &lt;GlobalNamingResources>&#xA;    &lt;!-- Editable user database that can also be used by&#xA;         UserDatabaseRealm to authenticate users&#xA;    -->&#xA;    &lt;Resource name=&quot;UserDatabase&quot; auth=&quot;Container&quot;&#xA;              type=&quot;org.apache.catalina.UserDatabase&quot;&#xA;              description=&quot;User database that can be updated and saved&quot;&#xA;              factory=&quot;org.apache.catalina.users.MemoryUserDatabaseFactory&quot;&#xA;              pathname=&quot;conf/tomcat-users.xml&quot; />&#xA;  &lt;/GlobalNamingResources>&#xA;&#xA;  &lt;!-- A &quot;Service&quot; is a collection of one or more &quot;Connectors&quot; that share&#xA;       a single &quot;Container&quot; Note:  A &quot;Service&quot; is not itself a &quot;Container&quot;,&#xA;       so you may not define subcomponents such as &quot;Valves&quot; at this level.&#xA;       Documentation at /docs/config/service.html&#xA;   -->&#xA;  &lt;Service name=&quot;Catalina&quot;>&#xA;&#xA;    &lt;!--The connectors can use a shared executor, you can define one or more named thread pools-->&#xA;    &lt;!--&#xA;    &lt;Executor name=&quot;tomcatThreadPool&quot; namePrefix=&quot;catalina-exec-&quot;&#xA;        maxThreads=&quot;150&quot; minSpareThreads=&quot;4&quot;/>&#xA;    -->&#xA;&#xA;&#xA;    &lt;!-- A &quot;Connector&quot; represents an endpoint by which requests are received&#xA;         and responses are returned. Documentation at :&#xA;         Java HTTP Connector: /docs/config/http.html&#xA;         Java AJP  Connector: /docs/config/ajp.html&#xA;         APR (HTTP/AJP) Connector: /docs/apr.html&#xA;         Define a non-SSL/TLS HTTP/1.1 Connector on port 8080&#xA;    -->&#xA;    &lt;Connector port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot;&#xA;               connectionTimeout=&quot;20000&quot;&#xA;               redirectPort=&quot;8443&quot; />&#xA;    &lt;!-- A &quot;Connector&quot; using the shared thread pool-->&#xA;    &lt;!--&#xA;    &lt;Connector executor=&quot;tomcatThreadPool&quot;&#xA;               port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot;&#xA;               connectionTimeout=&quot;20000&quot;&#xA;               redirectPort=&quot;8443&quot; />&#xA;    -->&#xA;    &lt;!-- Define a SSL/TLS HTTP/1.1 Connector on port 8443&#xA;         This connector uses the NIO implementation. The default&#xA;         SSLImplementation will depend on the presence of the APR/native&#xA;         library and the useOpenSSL attribute of the&#xA;         AprLifecycleListener.&#xA;         Either JSSE or OpenSSL style configuration may be used regardless of&#xA;         the SSLImplementation selected. JSSE style configuration is used below.&#xA;    -->&#xA;    &lt;!--&#xA;    &lt;Connector port=&quot;8443&quot; protocol=&quot;org.apache.coyote.http11.Http11NioProtocol&quot;&#xA;               maxThreads=&quot;150&quot; SSLEnabled=&quot;true&quot;>&#xA;        &lt;SSLHostConfig>&#xA;            &lt;Certificate certificateKeystoreFile=&quot;conf/localhost-rsa.jks&quot;&#xA;                         type=&quot;RSA&quot; />&#xA;        &lt;/SSLHostConfig>&#xA;    &lt;/Connector>&#xA;    -->&#xA;    &lt;!-- Define a SSL/TLS HTTP/1.1 Connector on port 8443 with HTTP/2&#xA;         This connector uses the APR/native implementation which always uses&#xA;         OpenSSL for TLS.&#xA;         Either JSSE or OpenSSL style configuration may be used. OpenSSL style&#xA;         configuration is used below.&#xA;    -->&#xA;    &lt;!--&#xA;    &lt;Connector port=&quot;8443&quot; protocol=&quot;org.apache.coyote.http11.Http11AprProtocol&quot;&#xA;               maxThreads=&quot;150&quot; SSLEnabled=&quot;true&quot; >&#xA;        &lt;UpgradeProtocol className=&quot;org.apache.coyote.http2.Http2Protocol&quot; />&#xA;        &lt;SSLHostConfig>&#xA;            &lt;Certificate certificateKeyFile=&quot;conf/localhost-rsa-key.pem&quot;&#xA;                         certificateFile=&quot;conf/localhost-rsa-cert.pem&quot;&#xA;                         certificateChainFile=&quot;conf/localhost-rsa-chain.pem&quot;&#xA;                         type=&quot;RSA&quot; />&#xA;        &lt;/SSLHostConfig>&#xA;    &lt;/Connector>&#xA;    -->&#xA;&#xA;    &lt;!-- Define an AJP 1.3 Connector on port 8009 -->&#xA;    &lt;Connector port=&quot;8009&quot; protocol=&quot;AJP/1.3&quot; redirectPort=&quot;8443&quot; />&#xA;&#xA;&#xA;    &lt;!-- An Engine represents the entry point (within Catalina) that processes&#xA;         every request.  The Engine implementation for Tomcat stand alone&#xA;         analyzes the HTTP headers included with the request, and passes them&#xA;         on to the appropriate Host (virtual host).&#xA;         Documentation at /docs/config/engine.html -->&#xA;&#xA;    &lt;!-- You should set jvmRoute to support load-balancing via AJP ie :&#xA;    &lt;Engine name=&quot;Catalina&quot; defaultHost=&quot;localhost&quot; jvmRoute=&quot;jvm1&quot;>&#xA;    -->&#xA;    &lt;Engine name=&quot;Catalina&quot; defaultHost=&quot;localhost&quot;>&#xA;&#xA;      &lt;!--For clustering, please take a look at documentation at:&#xA;          /docs/cluster-howto.html  (simple how to)&#xA;          /docs/config/cluster.html (reference documentation) -->&#xA;      &lt;!--&#xA;      &lt;Cluster className=&quot;org.apache.catalina.ha.tcp.SimpleTcpCluster&quot;/>&#xA;      -->&#xA;&#xA;      &lt;!-- Use the LockOutRealm to prevent attempts to guess user passwords&#xA;           via a brute-force attack -->&#xA;      &lt;Realm className=&quot;org.apache.catalina.realm.LockOutRealm&quot;>&#xA;        &lt;!-- This Realm uses the UserDatabase configured in the global JNDI&#xA;             resources under the key &quot;UserDatabase&quot;.  Any edits&#xA;             that are performed against this UserDatabase are immediately&#xA;             available for use by the Realm.  -->&#xA;        &lt;Realm className=&quot;org.apache.catalina.realm.UserDatabaseRealm&quot;&#xA;               resourceName=&quot;UserDatabase&quot;/>&#xA;      &lt;/Realm>&#xA;&#xA;      &lt;Host name=&quot;localhost&quot;  appBase=&quot;webapps&quot;&#xA;            unpackWARs=&quot;true&quot; autoDeploy=&quot;true&quot;>&#xA;&#xA;        &lt;!-- SingleSignOn valve, share authentication between web applications&#xA;             Documentation at: /docs/config/valve.html -->&#xA;        &lt;!--&#xA;        &lt;Valve className=&quot;org.apache.catalina.authenticator.SingleSignOn&quot; />&#xA;        -->&#xA;&#xA;        &lt;!-- Access log processes all example.&#xA;             Documentation at: /docs/config/valve.html&#xA;             Note: The pattern used is equivalent to using pattern=&quot;common&quot; -->&#xA;        &lt;Valve className=&quot;org.apache.catalina.valves.AccessLogValve&quot; directory=&quot;logs&quot;&#xA;               prefix=&quot;localhost_access_log&quot; suffix=&quot;.txt&quot;&#xA;               pattern=&quot;%h %l %u %t &amp;quot;%r&amp;quot; %s %b&quot; />&#xA;&#xA;        ${igloo.tomcat.server_xml.context}&#xA;      &lt;/Host>&#xA;    &lt;/Engine>&#xA;  &lt;/Service>&#xA;&lt;/Server>"/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.85.name"
+            value="Apache Tomcat v8.5"/>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          filter=""
+          name="igloo.tomcat.90">
+        <setupTask
+            xsi:type="setup:VariableTask"
+            filter=""
+            name="igloo.tomcat.90.location"
+            value="$${user.home}/Documents/apps/apache-tomcat-9"
+            defaultValue=""/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.90.version.id"
+            value="90"/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.90.version"
+            value="9.0"/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.90.runtime.id"
+            value="Apache Tomcat v9.0"/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.90.server.id"
+            value="tomcat90"/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            type="TEXT"
+            name="igloo.tomcat.90.server_xml"
+            value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;!--&#xA;  Licensed to the Apache Software Foundation (ASF) under one or more&#xA;  contributor license agreements.  See the NOTICE file distributed with&#xA;  this work for additional information regarding copyright ownership.&#xA;  The ASF licenses this file to You under the Apache License, Version 2.0&#xA;  (the &quot;License&quot;); you may not use this file except in compliance with&#xA;  the License.  You may obtain a copy of the License at&#xA;&#xA;      http://www.apache.org/licenses/LICENSE-2.0&#xA;&#xA;  Unless required by applicable law or agreed to in writing, software&#xA;  distributed under the License is distributed on an &quot;AS IS&quot; BASIS,&#xA;  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.&#xA;  See the License for the specific language governing permissions and&#xA;  limitations under the License.&#xA;-->&#xA;&lt;!-- Note:  A &quot;Server&quot; is not itself a &quot;Container&quot;, so you may not&#xA;     define subcomponents such as &quot;Valves&quot; at this level.&#xA;     Documentation at /docs/config/server.html&#xA; -->&#xA;&lt;Server port=&quot;8005&quot; shutdown=&quot;SHUTDOWN&quot;>&#xA;  &lt;Listener className=&quot;org.apache.catalina.startup.VersionLoggerListener&quot; />&#xA;  &lt;!-- Security listener. Documentation at /docs/config/listeners.html&#xA;  &lt;Listener className=&quot;org.apache.catalina.security.SecurityListener&quot; />&#xA;  -->&#xA;  &lt;!--APR library loader. Documentation at /docs/apr.html -->&#xA;  &lt;Listener className=&quot;org.apache.catalina.core.AprLifecycleListener&quot; SSLEngine=&quot;on&quot; />&#xA;  &lt;!-- Prevent memory leaks due to use of particular java/javax APIs-->&#xA;  &lt;Listener className=&quot;org.apache.catalina.core.JreMemoryLeakPreventionListener&quot; />&#xA;  &lt;Listener className=&quot;org.apache.catalina.mbeans.GlobalResourcesLifecycleListener&quot; />&#xA;  &lt;Listener className=&quot;org.apache.catalina.core.ThreadLocalLeakPreventionListener&quot; />&#xA;&#xA;  &lt;!-- Global JNDI resources&#xA;       Documentation at /docs/jndi-resources-howto.html&#xA;  -->&#xA;  &lt;GlobalNamingResources>&#xA;    &lt;!-- Editable user database that can also be used by&#xA;         UserDatabaseRealm to authenticate users&#xA;    -->&#xA;    &lt;Resource name=&quot;UserDatabase&quot; auth=&quot;Container&quot;&#xA;              type=&quot;org.apache.catalina.UserDatabase&quot;&#xA;              description=&quot;User database that can be updated and saved&quot;&#xA;              factory=&quot;org.apache.catalina.users.MemoryUserDatabaseFactory&quot;&#xA;              pathname=&quot;conf/tomcat-users.xml&quot; />&#xA;  &lt;/GlobalNamingResources>&#xA;&#xA;  &lt;!-- A &quot;Service&quot; is a collection of one or more &quot;Connectors&quot; that share&#xA;       a single &quot;Container&quot; Note:  A &quot;Service&quot; is not itself a &quot;Container&quot;,&#xA;       so you may not define subcomponents such as &quot;Valves&quot; at this level.&#xA;       Documentation at /docs/config/service.html&#xA;   -->&#xA;  &lt;Service name=&quot;Catalina&quot;>&#xA;&#xA;    &lt;!--The connectors can use a shared executor, you can define one or more named thread pools-->&#xA;    &lt;!--&#xA;    &lt;Executor name=&quot;tomcatThreadPool&quot; namePrefix=&quot;catalina-exec-&quot;&#xA;        maxThreads=&quot;150&quot; minSpareThreads=&quot;4&quot;/>&#xA;    -->&#xA;&#xA;&#xA;    &lt;!-- A &quot;Connector&quot; represents an endpoint by which requests are received&#xA;         and responses are returned. Documentation at :&#xA;         Java HTTP Connector: /docs/config/http.html&#xA;         Java AJP  Connector: /docs/config/ajp.html&#xA;         APR (HTTP/AJP) Connector: /docs/apr.html&#xA;         Define a non-SSL/TLS HTTP/1.1 Connector on port 8080&#xA;    -->&#xA;    &lt;Connector port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot;&#xA;               connectionTimeout=&quot;20000&quot;&#xA;               redirectPort=&quot;8443&quot; />&#xA;    &lt;!-- A &quot;Connector&quot; using the shared thread pool-->&#xA;    &lt;!--&#xA;    &lt;Connector executor=&quot;tomcatThreadPool&quot;&#xA;               port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot;&#xA;               connectionTimeout=&quot;20000&quot;&#xA;               redirectPort=&quot;8443&quot; />&#xA;    -->&#xA;    &lt;!-- Define a SSL/TLS HTTP/1.1 Connector on port 8443&#xA;         This connector uses the NIO implementation. The default&#xA;         SSLImplementation will depend on the presence of the APR/native&#xA;         library and the useOpenSSL attribute of the&#xA;         AprLifecycleListener.&#xA;         Either JSSE or OpenSSL style configuration may be used regardless of&#xA;         the SSLImplementation selected. JSSE style configuration is used below.&#xA;    -->&#xA;    &lt;!--&#xA;    &lt;Connector port=&quot;8443&quot; protocol=&quot;org.apache.coyote.http11.Http11NioProtocol&quot;&#xA;               maxThreads=&quot;150&quot; SSLEnabled=&quot;true&quot;>&#xA;        &lt;SSLHostConfig>&#xA;            &lt;Certificate certificateKeystoreFile=&quot;conf/localhost-rsa.jks&quot;&#xA;                         type=&quot;RSA&quot; />&#xA;        &lt;/SSLHostConfig>&#xA;    &lt;/Connector>&#xA;    -->&#xA;    &lt;!-- Define a SSL/TLS HTTP/1.1 Connector on port 8443 with HTTP/2&#xA;         This connector uses the APR/native implementation which always uses&#xA;         OpenSSL for TLS.&#xA;         Either JSSE or OpenSSL style configuration may be used. OpenSSL style&#xA;         configuration is used below.&#xA;    -->&#xA;    &lt;!--&#xA;    &lt;Connector port=&quot;8443&quot; protocol=&quot;org.apache.coyote.http11.Http11AprProtocol&quot;&#xA;               maxThreads=&quot;150&quot; SSLEnabled=&quot;true&quot; >&#xA;        &lt;UpgradeProtocol className=&quot;org.apache.coyote.http2.Http2Protocol&quot; />&#xA;        &lt;SSLHostConfig>&#xA;            &lt;Certificate certificateKeyFile=&quot;conf/localhost-rsa-key.pem&quot;&#xA;                         certificateFile=&quot;conf/localhost-rsa-cert.pem&quot;&#xA;                         certificateChainFile=&quot;conf/localhost-rsa-chain.pem&quot;&#xA;                         type=&quot;RSA&quot; />&#xA;        &lt;/SSLHostConfig>&#xA;    &lt;/Connector>&#xA;    -->&#xA;&#xA;    &lt;!-- Define an AJP 1.3 Connector on port 8009 -->&#xA;    &lt;Connector port=&quot;8009&quot; protocol=&quot;AJP/1.3&quot; redirectPort=&quot;8443&quot; />&#xA;&#xA;&#xA;    &lt;!-- An Engine represents the entry point (within Catalina) that processes&#xA;         every request.  The Engine implementation for Tomcat stand alone&#xA;         analyzes the HTTP headers included with the request, and passes them&#xA;         on to the appropriate Host (virtual host).&#xA;         Documentation at /docs/config/engine.html -->&#xA;&#xA;    &lt;!-- You should set jvmRoute to support load-balancing via AJP ie :&#xA;    &lt;Engine name=&quot;Catalina&quot; defaultHost=&quot;localhost&quot; jvmRoute=&quot;jvm1&quot;>&#xA;    -->&#xA;    &lt;Engine name=&quot;Catalina&quot; defaultHost=&quot;localhost&quot;>&#xA;&#xA;      &lt;!--For clustering, please take a look at documentation at:&#xA;          /docs/cluster-howto.html  (simple how to)&#xA;          /docs/config/cluster.html (reference documentation) -->&#xA;      &lt;!--&#xA;      &lt;Cluster className=&quot;org.apache.catalina.ha.tcp.SimpleTcpCluster&quot;/>&#xA;      -->&#xA;&#xA;      &lt;!-- Use the LockOutRealm to prevent attempts to guess user passwords&#xA;           via a brute-force attack -->&#xA;      &lt;Realm className=&quot;org.apache.catalina.realm.LockOutRealm&quot;>&#xA;        &lt;!-- This Realm uses the UserDatabase configured in the global JNDI&#xA;             resources under the key &quot;UserDatabase&quot;.  Any edits&#xA;             that are performed against this UserDatabase are immediately&#xA;             available for use by the Realm.  -->&#xA;        &lt;Realm className=&quot;org.apache.catalina.realm.UserDatabaseRealm&quot;&#xA;               resourceName=&quot;UserDatabase&quot;/>&#xA;      &lt;/Realm>&#xA;&#xA;      &lt;Host name=&quot;localhost&quot;  appBase=&quot;webapps&quot;&#xA;            unpackWARs=&quot;true&quot; autoDeploy=&quot;true&quot;>&#xA;&#xA;        &lt;!-- SingleSignOn valve, share authentication between web applications&#xA;             Documentation at: /docs/config/valve.html -->&#xA;        &lt;!--&#xA;        &lt;Valve className=&quot;org.apache.catalina.authenticator.SingleSignOn&quot; />&#xA;        -->&#xA;&#xA;        &lt;!-- Access log processes all example.&#xA;             Documentation at: /docs/config/valve.html&#xA;             Note: The pattern used is equivalent to using pattern=&quot;common&quot; -->&#xA;        &lt;Valve className=&quot;org.apache.catalina.valves.AccessLogValve&quot; directory=&quot;logs&quot;&#xA;               prefix=&quot;localhost_access_log&quot; suffix=&quot;.txt&quot;&#xA;               pattern=&quot;%h %l %u %t &amp;quot;%r&amp;quot; %s %b&quot; />&#xA;      &#xA;      ${igloo.tomcat.server_xml.context}&#xA;      &lt;/Host>&#xA;    &lt;/Engine>&#xA;  &lt;/Service>&#xA;&lt;/Server>">
+          <description>Default server.xml, extracted from tomcat installation, with &lt;Context... /> added for webapp initialization</description>
+        </setupTask>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.90.name"
+            value="Apache Tomcat v9.0"/>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:VariableTask"
+          name="igloo.tomcat.server_xml.context"
+          value="&lt;Context docBase=&quot;${webapp.name}&quot; path=&quot;/${maven.project.name}&quot; reloadable=&quot;true&quot; source=&quot;org.eclipse.jst.jee.server:${webapp.name}&quot;/>">
+        <description>&lt;Context ... /> injected in server.xml to configure webapp</description>
+      </setupTask>
+      <description>Definition by version of tomcat attributes: ids, installation location, server.xml file, ...</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:CompoundTask"
+        name="tomcat.version.conditional">
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          filter="(igloo.tomcat.version=8.5)"
+          name="igloo.tomcat.conditional.85">
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.location"
+            value="${igloo.tomcat.85.location}"
+            defaultValue=""/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.version.id"
+            value="${igloo.tomcat.85.version.id}"/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.runtime.id"
+            value="${igloo.tomcat.85.runtime.id}"/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.server.id"
+            value="${igloo.tomcat.85.server.id}"/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.server_xml"
+            value="${igloo.tomcat.85.server_xml}"/>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          filter="(igloo.tomcat.version=9.0)"
+          name="igloo.tomcat.conditional.90">
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.location"
+            value="${igloo.tomcat.90.location}"
+            defaultValue=""/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.version.id"
+            value="${igloo.tomcat.90.version.id}"/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.runtime.id"
+            value="${igloo.tomcat.90.runtime.id}"/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.server.id"
+            value="${igloo.tomcat.90.server.id}"/>
+        <setupTask
+            xsi:type="setup:VariableTask"
+            name="igloo.tomcat.server_xml"
+            value="${igloo.tomcat.90.server_xml}"/>
+      </setupTask>
+      <description>Conditionally set igloo.tomcat.* variables (see filter attribute on folders)</description>
+    </setupTask>
+    <description>Variables</description>
+  </setupTask>
+  <setupTask
+      xsi:type="setup:CompoundTask"
+      name="Java">
+    <setupTask
+        xsi:type="jdt:JRETask"
+        version="JavaSE-11"
+        location="/usr/lib/jvm/java-11"
+        name="OpenJDK 11"/>
+    <setupTask
+        xsi:type="jdt:JRETask"
+        version="JavaSE-1.8"
+        location="/usr/lib/jvm/java-1.8.0"
+        name="OpenJDK 8"
+        executionEnvironmentDefault="false"/>
+  </setupTask>
+  <setupTask
+      xsi:type="setup:CompoundTask"
+      id="group.preferences"
+      name="Preferences">
+    <setupTask
+        xsi:type="setup:EclipseIniTask"
+        disabled="true"
+        option="-Xmx"
+        value="2048m"
+        vm="true">
+      <description>Set the heap space needed to work with the projects of ${scope.project.label}</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:CompoundTask"
+        name="User Preferences">
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          name="org.eclipse.core.runtime">
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.core.runtime/content-types/org.eclipse.jdt.core.javaProperties/charset"
+            value="UTF-8"/>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          name="org.eclipse.debug.ui">
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.debug.ui/Console.highWaterMark"
+            value="808000"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.debug.ui/Console.lowWaterMark"
+            value="800000"/>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          name="org.eclipse.egit.core">
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.egit.core/core_autoIgnoreDerivedResources"
+            value="false"/>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          name="org.eclipse.jdt.core">
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.missingDeprecatedAnnotation"
+            value="warning"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.unusedImport"
+            value="error"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.lineSplit"
+            value="120"/>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          name="org.eclipse.jdt.ui">
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.jdt.ui/formatter_profile"
+            value="_Igloo Kobalt"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.jdt.ui/formatter_settings_version"
+            value="14"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.jdt.ui/org.eclipse.jdt.ui.formatterprofiles"
+            value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?>&#xA;&lt;profiles version=&quot;14&quot;>&#xA;&lt;profile kind=&quot;CodeFormatterProfile&quot; name=&quot;Igloo Kobalt&quot; version=&quot;14&quot;>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_ellipsis&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_enum_declarations&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_in_empty_annotation_declaration&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_allocation_expression&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_at_in_annotation_type_declaration&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.parentheses_positions_in_for_statment&quot; value=&quot;common_lines&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.new_lines_at_block_boundaries&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_constructor_declaration_parameters&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.insert_new_line_for_parameter&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_package&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.parentheses_positions_in_method_invocation&quot; value=&quot;common_lines&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_enum_constant&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.blank_lines_after_imports&quot; value=&quot;1&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_while&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.insert_new_line_before_root_tags&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_annotation_type_member_declaration&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_method_declaration_throws&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.parentheses_positions_in_switch_statement&quot; value=&quot;common_lines&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.format_javadoc_comments&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.indentation.size&quot; value=&quot;4&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_postfix_operator&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.parentheses_positions_in_enum_constant_declaration&quot; value=&quot;common_lines&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_for_increments&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_type_arguments&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_for_inits&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_in_empty_anonymous_type_declaration&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_semicolon_in_for&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.align_with_spaces&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.disabling_tag&quot; value=&quot;@formatter:off&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.continuation_indentation&quot; value=&quot;2&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_enum_constants&quot; value=&quot;0&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.blank_lines_before_imports&quot; value=&quot;1&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.blank_lines_after_package&quot; value=&quot;1&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_binary_operator&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_multiple_local_declarations&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.parentheses_positions_in_if_while_statement&quot; value=&quot;common_lines&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_arguments_in_enum_constant&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_angle_bracket_in_parameterized_type_reference&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.indent_root_tags&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.wrap_before_or_operator_multicatch&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.enabling_tag&quot; value=&quot;@formatter:on&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_closing_brace_in_block&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.count_line_length_from_starting_position&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_parenthesized_expression_in_return&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_throws_clause_in_method_declaration&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_parameter&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.keep_then_statement_on_same_line&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_field&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_explicitconstructorcall_arguments&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_in_empty_block&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_prefix_operator&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.blank_lines_between_type_declarations&quot; value=&quot;1&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_brace_in_array_initializer&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_for&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_catch&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_angle_bracket_in_type_arguments&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_method&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_switch&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_parameterized_type_references&quot; value=&quot;0&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_anonymous_type_declaration&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_parenthesized_expression&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_enum_constant&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.never_indent_line_comments_on_first_column&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_and_in_type_parameter&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_for_inits&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.indent_statements_compare_to_block&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.brace_position_for_anonymous_type_declaration&quot; value=&quot;end_of_line&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_question_in_wildcard&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_annotation&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_method_invocation_arguments&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_switch&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.align_tags_descriptions_grouped&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.line_length&quot; value=&quot;80&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.use_on_off_tags&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_between_empty_brackets_in_array_allocation_expression&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_enum_constant&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_method_invocation&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_assignment_operator&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_type_declaration&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_for&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.preserve_white_space_between_code_and_line_comments&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_local_variable&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.brace_position_for_method_declaration&quot; value=&quot;end_of_line&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.align_variable_declarations_on_columns&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_method_invocation&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_union_type_in_multicatch&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_colon_in_for&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.number_of_blank_lines_at_beginning_of_method_body&quot; value=&quot;0&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_closing_angle_bracket_in_type_arguments&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.keep_else_statement_on_same_line&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_binary_expression&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.parentheses_positions_in_catch_clause&quot; value=&quot;common_lines&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_parameterized_type_reference&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_array_initializer&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_multiple_field_declarations&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_annotation&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_arguments_in_explicit_constructor_call&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_annotation_declaration_header&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_superinterfaces&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_colon_in_default&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_question_in_conditional&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.brace_position_for_block&quot; value=&quot;end_of_line&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.brace_position_for_constructor_declaration&quot; value=&quot;end_of_line&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.brace_position_for_lambda_body&quot; value=&quot;end_of_line&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.compact_else_if&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_type_parameters&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_catch&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_method_invocation&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.put_empty_statement_on_new_line&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_parameters_in_constructor_declaration&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_type_parameters&quot; value=&quot;0&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_method_invocation_arguments&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_arguments_in_method_invocation&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_throws_clause_in_constructor_declaration&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_compact_loops&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.clear_blank_lines_in_block_comment&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_before_catch_in_try_statement&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_try&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.keep_simple_for_body_on_same_line&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_at_end_of_file_if_missing&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.clear_blank_lines_in_javadoc_comment&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_array_initializer&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_binary_operator&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_unary_operator&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_expressions_in_array_initializer&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.format_line_comment_starting_on_first_column&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.number_of_empty_lines_to_preserve&quot; value=&quot;1&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.parentheses_positions_in_annotation&quot; value=&quot;common_lines&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_colon_in_case&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_ellipsis&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_semicolon_in_try_resources&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_colon_in_assert&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_if&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_type_arguments&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_and_in_type_parameter&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_in_empty_type_declaration&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_parenthesized_expression&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.format_line_comments&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_colon_in_labeled_statement&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.align_type_members_on_columns&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_assignment&quot; value=&quot;0&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_module_statements&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_in_empty_method_body&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_type_header&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_method_declaration&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.align_tags_names_descriptions&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_enum_constant&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_superinterfaces_in_type_declaration&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.blank_lines_before_first_class_body_declaration&quot; value=&quot;0&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_conditional_expression&quot; value=&quot;80&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_before_closing_brace_in_array_initializer&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_constructor_declaration_parameters&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.format_guardian_clause_on_one_line&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_if&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.align_assignment_statements_on_columns&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_type&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_block&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.brace_position_for_enum_declaration&quot; value=&quot;end_of_line&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.brace_position_for_block_in_case&quot; value=&quot;end_of_line&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_constructor_declaration&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.format_header&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_arguments_in_allocation_expression&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_method_invocation&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_while&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_switch&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_method_declaration&quot; value=&quot;0&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.join_wrapped_lines&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_constructor_declaration&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.wrap_before_conditional_operator&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.indent_switchstatements_compare_to_cases&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_bracket_in_array_allocation_expression&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_synchronized&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.align_fields_grouping_blank_lines&quot; value=&quot;2147483647&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.new_lines_at_javadoc_boundaries&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.brace_position_for_annotation_type_declaration&quot; value=&quot;end_of_line&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_colon_in_for&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_resources_in_try&quot; value=&quot;80&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.use_tabs_only_for_leading_indentations&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.parentheses_positions_in_try_clause&quot; value=&quot;common_lines&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_selector_in_method_invocation&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.never_indent_block_comments_on_first_column&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_synchronized&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_constructor_declaration_throws&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.tabulation.size&quot; value=&quot;4&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_in_empty_enum_constant&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_allocation_expression&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_bracket_in_array_reference&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_colon_in_conditional&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.format_source_code&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_array_initializer&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_try&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_semicolon_in_try_resources&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.blank_lines_before_field&quot; value=&quot;0&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_at_in_annotation&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.continuation_indentation_for_array_initializer&quot; value=&quot;2&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_question_in_wildcard&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.blank_lines_before_method&quot; value=&quot;1&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_superclass_in_type_declaration&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_superinterfaces_in_enum_declaration&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_parenthesized_expression_in_throw&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.wrap_before_assignment_operator&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_colon_in_labeled_statement&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.brace_position_for_switch&quot; value=&quot;end_of_line&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_superinterfaces&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_method_declaration_parameters&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_after_type_annotation&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_brace_in_array_initializer&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_parenthesized_expression&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.format_html&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_at_in_annotation_type_declaration&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_closing_angle_bracket_in_type_parameters&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.parentheses_positions_in_method_delcaration&quot; value=&quot;common_lines&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_compact_if&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.indent_empty_lines&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_type_arguments&quot; value=&quot;0&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_parameterized_type_reference&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_unary_operator&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_enum_constant&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_arguments_in_annotation&quot; value=&quot;0&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_enum_declarations&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.keep_empty_array_initializer_on_one_line&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.indent_switchstatements_compare_to_switch&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_before_else_in_if_statement&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_assignment_operator&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_constructor_declaration&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.blank_lines_before_new_chunk&quot; value=&quot;1&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_after_label&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_enum_declaration_header&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_bracket_in_array_allocation_expression&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_constructor_declaration&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_colon_in_conditional&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_angle_bracket_in_parameterized_type_reference&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_method_declaration_parameters&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_angle_bracket_in_type_arguments&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_cast&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_colon_in_assert&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.blank_lines_before_member_type&quot; value=&quot;1&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_before_while_in_do_statement&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_bracket_in_array_type_reference&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_angle_bracket_in_parameterized_type_reference&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_arguments_in_qualified_allocation_expression&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_after_opening_brace_in_array_initializer&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_in_empty_enum_declaration&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.indent_breaks_compare_to_cases&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_method_declaration&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_if&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_semicolon&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_postfix_operator&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_try&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_angle_bracket_in_type_arguments&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_cast&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.format_block_comments&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_lambda_arrow&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_method_declaration&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.keep_imple_if_on_one_line&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_enum_declaration&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_parameters_in_method_declaration&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_between_brackets_in_array_type_reference&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_angle_bracket_in_type_parameters&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_semicolon_in_for&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_method_declaration_throws&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_bracket_in_array_allocation_expression&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.indent_statements_compare_to_body&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_multiple_fields&quot; value=&quot;16&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_enum_constant_arguments&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.keep_simple_while_body_on_same_line&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_prefix_operator&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.brace_position_for_array_initializer&quot; value=&quot;end_of_line&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.wrap_before_binary_operator&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_method_declaration&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_type_parameters&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_catch&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_bracket_in_array_reference&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_annotation&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_enum_constant_arguments&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.parentheses_positions_in_lambda_declaration&quot; value=&quot;common_lines&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_between_empty_braces_in_array_initializer&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_colon_in_case&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_multiple_local_declarations&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.keep_simple_do_while_body_on_same_line&quot; value=&quot;false&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_annotation_type_declaration&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_bracket_in_array_reference&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_method_declaration&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.wrap_outer_expressions_when_nested&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_closing_paren_in_cast&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.brace_position_for_enum_constant&quot; value=&quot;end_of_line&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.brace_position_for_type_declaration&quot; value=&quot;end_of_line&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.blank_lines_before_package&quot; value=&quot;0&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_for&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_synchronized&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_for_increments&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_annotation_type_member_declaration&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.alignment_for_expressions_in_for_loop_header&quot; value=&quot;0&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_while&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_enum_constant&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_explicitconstructorcall_arguments&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_annotation&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_angle_bracket_in_type_parameters&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_enum_constant_header&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_lambda_arrow&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_constructor_declaration&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_constructor_declaration_throws&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.join_lines_in_comments&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_angle_bracket_in_type_parameters&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_question_in_conditional&quot; value=&quot;insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.comment.indent_parameter_description&quot; value=&quot;true&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_new_line_before_finally_in_try_statement&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.tabulation.char&quot; value=&quot;tab&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_multiple_field_declarations&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.blank_lines_between_import_groups&quot; value=&quot;1&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.lineSplit&quot; value=&quot;120&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_annotation&quot; value=&quot;do not insert&quot;/>&#xA;&lt;setting id=&quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_switch&quot; value=&quot;insert&quot;/>&#xA;&lt;/profile>&#xA;&lt;/profiles>&#xA;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.jdt.ui/org.eclipse.jdt.ui.formatterprofiles.version"
+            value="14"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.jdt.ui/org.eclipse.jface.textfont"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          name="org.eclipse.m2e.core">
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.m2e.core/eclipse.m2.downloadJavadoc"
+            value="false"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.m2e.core/eclipse.m2.downloadSources"
+            value="false"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.m2e.core/eclipse.m2.updateIndexes"
+            value="false"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.m2e.core/eclipse.m2.updateProjects"
+            value="true"/>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          name="org.eclipse.ui">
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui/SHOW_TEXT_ON_PERSPECTIVE_BAR"
+            value="false"/>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          name="org.eclipse.ui.editors">
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.editors/lineNumberRuler"
+            value="true"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.editors/printMargin"
+            value="true"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.editors/printMarginColumn"
+            value="120"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.editors/quickdiff.quickDiff"
+            value="true"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.editors/showWhitespaceCharacters"
+            value="true"/>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          name="org.eclipse.ui.ide">
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.ide/WORKSPACE_NAME"
+            value="${git.clone.name}"/>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          name="org.eclipse.ui.workbench">
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/ColorsAndFontsPreferencePage.expandedCategories"
+            value="Torg.eclipse.ui.workbenchMisc"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/ColorsAndFontsPreferencePage.selectedElement"
+            value="Forg.eclipse.jface.textfont"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.compare.contentmergeviewer.TextMergeViewer"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.debug.ui.consoleFont"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.debug.ui.DetailPaneFont"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.debug.ui.MemoryViewTableFont"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.egit.ui.CommitMessageEditorFont"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.egit.ui.CommitMessageFont"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.egit.ui.DiffHeadlineFont"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.jdt.internal.ui.compare.JavaMergeViewer"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.jdt.internal.ui.compare.PropertiesFileMergeViewer"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.jdt.ui.editors.textfont"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.jdt.ui.PropertiesFileEditor.textfont"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.jface.textfont"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.mylyn.wikitext.ui.presentation.textFont"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.pde.internal.ui.compare.ManifestContentMergeViewer"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.pde.internal.ui.compare.PluginContentMergeViewer"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.recommenders.snipmatch.rcp.searchTextFont"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.wst.jsdt.internal.ui.compare.JavaMergeViewer"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.wst.jsdt.ui.editors.textfont"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/org.eclipse.wst.sse.ui.textfont"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.ui.workbench/preference.console.font"
+            value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          name="org.eclipse.wst.server.core">
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            filter=""
+            key="/instance/org.eclipse.wst.server.core/runtimes"
+            value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?>&#xA;&lt;runtimes>&#xA;  &lt;runtime id=&quot;${igloo.tomcat.85.runtime.id}&quot; location=&quot;${igloo.tomcat.85.location}&quot; name=&quot;${igloo.tomcat.85.name}&quot;  runtime-type-id=&quot;org.eclipse.jst.server.tomcat.runtime.${igloo.tomcat.85.version.id}&quot; timestamp=&quot;0&quot;/>&#xA;  &lt;runtime id=&quot;${igloo.tomcat.90.runtime.id}&quot; location=&quot;${igloo.tomcat.90.location}&quot; name=&quot;${igloo.tomcat.90.name}&quot;  runtime-type-id=&quot;org.eclipse.jst.server.tomcat.runtime.${igloo.tomcat.90.version.id}&quot; timestamp=&quot;0&quot;/>&#xA;&lt;/runtimes>&#xA;"/>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          name="org.eclipse.wst.xml.core">
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.wst.xml.core/lineWidth"
+            value="200"/>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:CompoundTask"
+          name="org.jboss.tools.maven.apt">
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.jboss.tools.maven.apt/org.jboss.tools.maven.apt.mode"
+            value="maven_execution"/>
+      </setupTask>
+      <setupTask
+          xsi:type="setup:ResourceCreationTask"
+          force="true"
+          targetURL="${workspace.location|uri}/.metadata/.plugins/org.eclipse.wst.xml.core/user_catalog.xml"
+          encoding="UTF-8">
+        <description>XML Catalogs</description>
+        <content>
+          &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?>
+          &lt;catalog xmlns=&quot;urn:oasis:names:tc:entity:xmlns:xml:catalog&quot;>
+            &lt;system systemId=&quot;http://www.springframework.org/schema/cache/spring-cache-4.0.xsd&quot; uri=&quot;https://www.springframework.org/schema/cache/spring-cache-4.0.xsd&quot;/>
+            &lt;system systemId=&quot;https://www.springframework.org/schema/security/spring-security-5.2.xsd&quot; uri=&quot;https://raw.githubusercontent.com/spring-projects/spring-security/master/config/src/main/resources/org/springframework/security/config/spring-security-5.2.xsd&quot;/>
+          &lt;/catalog>
+        </content>
+      </setupTask>
+    </setupTask>
+    <description>Preferences</description>
+  </setupTask>
+  <setupTask
+      xsi:type="setup:CompoundTask"
+      id="group.git"
+      name="Git">
+    <setupTask
+        xsi:type="git:GitCloneTask"
+        id="git.clone.org.iglooproject.eclipse.project"
+        location="${user.home}/git/${git.clone.name}"
+        remoteURI="${repository.choice}"
+        pushURI=""
+        checkoutBranch="${git.clone.branch}">
+      <annotation
+          source="http://www.eclipse.org/oomph/setup/InducedChoices">
+        <detail
+            key="inherit">
+          <value>eclipse.git.remoteURIs</value>
+        </detail>
+        <detail
+            key="label">
+          <value>${scope.project.label} Git repository</value>
+        </detail>
+      </annotation>
+      <description>${scope.project.label}</description>
+    </setupTask>
+    <setupTask
+        xsi:type="maven:MavenImportTask"
+        projectNameTemplate="">
+      <sourceLocator
+          rootFolder="${user.home}/git/${git.clone.name}"
+          locateNestedProjects="true"/>
+      <description></description>
+    </setupTask>
+    <description>Git</description>
+  </setupTask>
+  <setupTask
+      xsi:type="setup:CompoundTask"
+      id="group.tomcat"
+      name="Tomcat">
+    <setupTask
+        xsi:type="setup:CompoundTask"
+        name="Tomcat configuration initialization">
+      <setupTask
+          xsi:type="setup:ResourceCopyTask"
+          sourceURL="${igloo.tomcat.location|uri}/conf/catalina.policy"
+          targetURL="${user.home|uri}/git/${git.clone.name}/eclipse/tomcat-main/catalina.policy"/>
+      <setupTask
+          xsi:type="setup:ResourceCopyTask"
+          sourceURL="${igloo.tomcat.location|uri}/conf/server.xml"
+          targetURL="${user.home|uri}/git/${git.clone.name}/eclipse/tomcat-main/server.xml"/>
+      <setupTask
+          xsi:type="setup:ResourceCopyTask"
+          sourceURL="${igloo.tomcat.location|uri}/conf/catalina.properties"
+          targetURL="${user.home|uri}/git/${git.clone.name}/eclipse/tomcat-main/catalina.properties"/>
+      <setupTask
+          xsi:type="setup:ResourceCopyTask"
+          sourceURL="${igloo.tomcat.location|uri}/conf/tomcat-users.xml"
+          targetURL="${user.home|uri}/git/${git.clone.name}/eclipse/tomcat-main/tomcat-users.xml"/>
+      <setupTask
+          xsi:type="setup:ResourceCopyTask"
+          sourceURL="${igloo.tomcat.location|uri}/conf/tomcat-users.xsd"
+          targetURL="${user.home|uri}/git/${git.clone.name}/eclipse/tomcat-main/tomcat-users.xsd"/>
+      <setupTask
+          xsi:type="setup:ResourceCopyTask"
+          sourceURL="${igloo.tomcat.location|uri}/conf/web.xml"
+          targetURL="${user.home|uri}/git/${git.clone.name}/eclipse/tomcat-main/web.xml"/>
+      <setupTask
+          xsi:type="setup:ResourceCopyTask"
+          sourceURL="${igloo.tomcat.location|uri}/conf/context.xml"
+          targetURL="${user.home|uri}/git/${git.clone.name}/eclipse/tomcat-main/context.xml"/>
+      <setupTask
+          xsi:type="setup:ResourceCreationTask"
+          targetURL="${user.home|uri}/git/${git.clone.name}/eclipse/tomcat-main/server.xml">
+        <content>${igloo.tomcat.server_xml}</content>
+      </setupTask>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:ResourceCreationTask"
+        targetURL="${workspace.location|uri}/.metadata/.plugins/org.eclipse.wst.server.core/servers.xml"
+        encoding="UTF-8">
+      <description>tomcat server integration</description>
+      <content>
+        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?>
+        &lt;servers>
+          &lt;server auto-publish-setting=&quot;2&quot; auto-publish-time=&quot;1&quot; configuration-id=&quot;/${maven.project.name}/eclipse/tomcat-main&quot; deployDir=&quot;wtpwebapps&quot; hostname=&quot;localhost&quot; id=&quot;${igloo.tomcat.server.id}&quot; name=&quot;Tomcat v${igloo.tomcat.version}&quot; runtime-id=&quot;${igloo.tomcat.runtime.id}&quot; server-type=&quot;org.eclipse.jst.server.tomcat.${igloo.tomcat.version.id}&quot; server-type-id=&quot;org.eclipse.jst.server.tomcat.${igloo.tomcat.version.id}&quot; start-timeout=&quot;450&quot; stop-timeout=&quot;150&quot; testEnvironment=&quot;true&quot; timestamp=&quot;2&quot; modulesReloadableByDefault=&quot;false&quot;>
+            &lt;list key=&quot;modules&quot; value0=&quot;${webapp.name}::org.eclipse.jst.jee.server:${webapp.name}::jst.web::3.0&quot;/>
+          &lt;/server>
+        &lt;/servers>
+      </content>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:ResourceCreationTask"
+        targetURL="${workspace.location|uri}/.metadata/.plugins/org.eclipse.debug.core/.launches/${igloo.tomcat.server.id}.launch"
+        encoding="UTF-8">
+      <description>tomcat server integration</description>
+      <content>
+        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?>
+        &lt;launchConfiguration type=&quot;org.eclipse.jst.server.tomcat.core.launchConfigurationType&quot;>
+        &lt;listAttribute key=&quot;org.eclipse.debug.ui.favoriteGroups&quot;>
+        &lt;listEntry value=&quot;org.eclipse.debug.ui.launchGroup.debug&quot;/>
+        &lt;listEntry value=&quot;org.eclipse.debug.ui.launchGroup.run&quot;/>
+        &lt;/listAttribute>
+        &lt;listAttribute key=&quot;org.eclipse.jdt.launching.CLASSPATH&quot;>
+        &lt;listEntry value=&quot;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot; standalone=&amp;quot;no&amp;quot;?&amp;gt;&amp;#10;&amp;lt;runtimeClasspathEntry containerPath=&amp;quot;org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8&amp;quot; path=&amp;quot;2&amp;quot; type=&amp;quot;4&amp;quot;/&amp;gt;&amp;#10;&quot;/>
+        &lt;/listAttribute>
+        &lt;booleanAttribute key=&quot;org.eclipse.jdt.launching.DEFAULT_CLASSPATH&quot; value=&quot;false&quot;/>
+        &lt;stringAttribute key=&quot;org.eclipse.jdt.launching.JRE_CONTAINER&quot; value=&quot;org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8&quot;/>
+        &lt;stringAttribute key=&quot;org.eclipse.jdt.launching.PROGRAM_ARGUMENTS&quot; value=&quot;start&quot;/>
+        &lt;stringAttribute key=&quot;org.eclipse.jdt.launching.VM_ARGUMENTS&quot; value=&quot;&quot; />
+        &lt;stringAttribute key=&quot;server-id&quot; value=&quot;${igloo.tomcat.server.id}&quot;/>
+        &lt;/launchConfiguration>
+      </content>
+    </setupTask>
+    <description>Tomcat</description>
+  </setupTask>
+  <setupTask
+      xsi:type="setup:CompoundTask"
+      id="group.launchers"
+      name="Launchers">
+    <description>Launchers</description>
+  </setupTask>
+  <stream name="master"
+      label="Master"/>
+</setup:Project>
