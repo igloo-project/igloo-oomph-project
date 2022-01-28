@@ -22,7 +22,7 @@
       name="workspace.location"
       value="${osgi.instance.area|trimTrailingSlashes}"
       storageURI="scope://Workspace"/>
-  <project href="igloo/org.iglooproject.eclipse.igloo.setup#/"/>
-  <project href="igloo/org.iglooproject.eclipse.project.setup#/"/>
+  <project href="https://raw.githubusercontent.com/igloo-project/igloo-oomph-project/master/igloo/org.iglooproject.eclipse.igloo.setup#/"/>
+  <project href="https://raw.githubusercontent.com/igloo-project/igloo-oomph-project/master/igloo/org.iglooproject.eclipse.project.setup#/"/>
   <description>Igloo projects.</description>
 </setup:ProjectCatalog>
