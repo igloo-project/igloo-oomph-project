@@ -20,7 +20,7 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="workspace.location"
-      value="${osgi.instance.area|trimTrailingSlashes}"
+      value="${osgi.instance.area|file|trimTrailingSlashes}"
       storageURI="scope://Workspace"/>
   <project href="https://raw.githubusercontent.com/igloo-project/igloo-oomph-project/master/igloo/org.iglooproject.eclipse.igloo.setup#/"/>
   <project href="https://raw.githubusercontent.com/igloo-project/igloo-oomph-project/master/igloo/org.iglooproject.eclipse.project.setup#/"/>
