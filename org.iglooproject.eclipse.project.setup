@@ -9,7 +9,7 @@
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
     xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/maven/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Maven.ecore"
     name="org.iglooproject.eclipse.project"
-    label="igloo simple project">
+    label="Igloo project import">
   <setupTask
       xsi:type="setup:CompoundTask"
       id="group.variables"
@@ -499,10 +499,16 @@
       <setupTask
           xsi:type="setup:ResourceCreationTask"
           force="true"
-          content="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?>&#xA;&lt;catalog xmlns=&quot;urn:oasis:names:tc:entity:xmlns:xml:catalog&quot;>&#xA;  &lt;system systemId=&quot;http://www.springframework.org/schema/cache/spring-cache-4.0.xsd&quot; uri=&quot;https://www.springframework.org/schema/cache/spring-cache-4.0.xsd&quot;/>&#xA;  &lt;system systemId=&quot;https://www.springframework.org/schema/security/spring-security-5.2.xsd&quot; uri=&quot;https://raw.githubusercontent.com/spring-projects/spring-security/master/config/src/main/resources/org/springframework/security/config/spring-security-5.2.xsd&quot;/>&#xA;&lt;/catalog>"
           targetURL="${workspace.location|uri}/.metadata/.plugins/org.eclipse.wst.xml.core/user_catalog.xml"
           encoding="UTF-8">
         <description>XML Catalogs</description>
+        <content>
+          &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?>
+          &lt;catalog xmlns=&quot;urn:oasis:names:tc:entity:xmlns:xml:catalog&quot;>
+            &lt;system systemId=&quot;http://www.springframework.org/schema/cache/spring-cache-4.0.xsd&quot; uri=&quot;https://www.springframework.org/schema/cache/spring-cache-4.0.xsd&quot;/>
+            &lt;system systemId=&quot;https://www.springframework.org/schema/security/spring-security-5.2.xsd&quot; uri=&quot;https://raw.githubusercontent.com/spring-projects/spring-security/master/config/src/main/resources/org/springframework/security/config/spring-security-5.2.xsd&quot;/>
+          &lt;/catalog>
+        </content>
       </setupTask>
     </setupTask>
     <description>Preferences</description>
@@ -578,22 +584,46 @@
           targetURL="${user.home|uri}/git/${git.clone.name}/eclipse/tomcat-main/context.xml"/>
       <setupTask
           xsi:type="setup:ResourceCreationTask"
-          content="${igloo.tomcat.server_xml}"
-          targetURL="${user.home|uri}/git/${git.clone.name}/eclipse/tomcat-main/server.xml"/>
+          targetURL="${user.home|uri}/git/${git.clone.name}/eclipse/tomcat-main/server.xml">
+        <content>${igloo.tomcat.server_xml}</content>
+      </setupTask>
     </setupTask>
     <setupTask
         xsi:type="setup:ResourceCreationTask"
-        content="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?>&#xA;&lt;servers>&#xA;  &lt;server auto-publish-setting=&quot;2&quot; auto-publish-time=&quot;1&quot; configuration-id=&quot;/${maven.project.name}/eclipse/tomcat-main&quot; deployDir=&quot;wtpwebapps&quot; hostname=&quot;localhost&quot; id=&quot;${igloo.tomcat.server.id}&quot; name=&quot;Tomcat v${igloo.tomcat.version}&quot; runtime-id=&quot;${igloo.tomcat.runtime.id}&quot; server-type=&quot;org.eclipse.jst.server.tomcat.${igloo.tomcat.version.id}&quot; server-type-id=&quot;org.eclipse.jst.server.tomcat.${igloo.tomcat.version.id}&quot; start-timeout=&quot;450&quot; stop-timeout=&quot;150&quot; testEnvironment=&quot;true&quot; timestamp=&quot;2&quot; modulesReloadableByDefault=&quot;false&quot;>&#xA;    &lt;list key=&quot;modules&quot; value0=&quot;${webapp.name}::org.eclipse.jst.jee.server:${webapp.name}::jst.web::3.0&quot;/>&#xA;  &lt;/server>&#xA;&lt;/servers>"
         targetURL="${workspace.location|uri}/.metadata/.plugins/org.eclipse.wst.server.core/servers.xml"
         encoding="UTF-8">
       <description>tomcat server integration</description>
+      <content>
+        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?>
+        &lt;servers>
+          &lt;server auto-publish-setting=&quot;2&quot; auto-publish-time=&quot;1&quot; configuration-id=&quot;/${maven.project.name}/eclipse/tomcat-main&quot; deployDir=&quot;wtpwebapps&quot; hostname=&quot;localhost&quot; id=&quot;${igloo.tomcat.server.id}&quot; name=&quot;Tomcat v${igloo.tomcat.version}&quot; runtime-id=&quot;${igloo.tomcat.runtime.id}&quot; server-type=&quot;org.eclipse.jst.server.tomcat.${igloo.tomcat.version.id}&quot; server-type-id=&quot;org.eclipse.jst.server.tomcat.${igloo.tomcat.version.id}&quot; start-timeout=&quot;450&quot; stop-timeout=&quot;150&quot; testEnvironment=&quot;true&quot; timestamp=&quot;2&quot; modulesReloadableByDefault=&quot;false&quot;>
+            &lt;list key=&quot;modules&quot; value0=&quot;${webapp.name}::org.eclipse.jst.jee.server:${webapp.name}::jst.web::3.0&quot;/>
+          &lt;/server>
+        &lt;/servers>
+      </content>
     </setupTask>
     <setupTask
         xsi:type="setup:ResourceCreationTask"
-        content="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?>&#xA;&lt;launchConfiguration type=&quot;org.eclipse.jst.server.tomcat.core.launchConfigurationType&quot;>&#xA;&lt;listAttribute key=&quot;org.eclipse.debug.ui.favoriteGroups&quot;>&#xA;&lt;listEntry value=&quot;org.eclipse.debug.ui.launchGroup.debug&quot;/>&#xA;&lt;listEntry value=&quot;org.eclipse.debug.ui.launchGroup.run&quot;/>&#xA;&lt;/listAttribute>&#xA;&lt;listAttribute key=&quot;org.eclipse.jdt.launching.CLASSPATH&quot;>&#xA;&lt;listEntry value=&quot;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot; standalone=&amp;quot;no&amp;quot;?&amp;gt;&amp;#10;&amp;lt;runtimeClasspathEntry containerPath=&amp;quot;org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8&amp;quot; path=&amp;quot;2&amp;quot; type=&amp;quot;4&amp;quot;/&amp;gt;&amp;#10;&quot;/>&#xA;&lt;/listAttribute>&#xA;&lt;booleanAttribute key=&quot;org.eclipse.jdt.launching.DEFAULT_CLASSPATH&quot; value=&quot;false&quot;/>&#xA;&lt;stringAttribute key=&quot;org.eclipse.jdt.launching.JRE_CONTAINER&quot; value=&quot;org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8&quot;/>&#xA;&lt;stringAttribute key=&quot;org.eclipse.jdt.launching.PROGRAM_ARGUMENTS&quot; value=&quot;start&quot;/>&#xA;&lt;stringAttribute key=&quot;org.eclipse.jdt.launching.VM_ARGUMENTS&quot; value=&quot;&quot; />&#xA;&lt;stringAttribute key=&quot;server-id&quot; value=&quot;${igloo.tomcat.server.id}&quot;/>&#xA;&lt;/launchConfiguration>"
         targetURL="${workspace.location|uri}/.metadata/.plugins/org.eclipse.debug.core/.launches/${igloo.tomcat.server.id}.launch"
         encoding="UTF-8">
       <description>tomcat server integration</description>
+      <content>
+        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?>
+        &lt;launchConfiguration type=&quot;org.eclipse.jst.server.tomcat.core.launchConfigurationType&quot;>
+        &lt;listAttribute key=&quot;org.eclipse.debug.ui.favoriteGroups&quot;>
+        &lt;listEntry value=&quot;org.eclipse.debug.ui.launchGroup.debug&quot;/>
+        &lt;listEntry value=&quot;org.eclipse.debug.ui.launchGroup.run&quot;/>
+        &lt;/listAttribute>
+        &lt;listAttribute key=&quot;org.eclipse.jdt.launching.CLASSPATH&quot;>
+        &lt;listEntry value=&quot;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot; standalone=&amp;quot;no&amp;quot;?&amp;gt;&amp;#10;&amp;lt;runtimeClasspathEntry containerPath=&amp;quot;org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8&amp;quot; path=&amp;quot;2&amp;quot; type=&amp;quot;4&amp;quot;/&amp;gt;&amp;#10;&quot;/>
+        &lt;/listAttribute>
+        &lt;booleanAttribute key=&quot;org.eclipse.jdt.launching.DEFAULT_CLASSPATH&quot; value=&quot;false&quot;/>
+        &lt;stringAttribute key=&quot;org.eclipse.jdt.launching.JRE_CONTAINER&quot; value=&quot;org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8&quot;/>
+        &lt;stringAttribute key=&quot;org.eclipse.jdt.launching.PROGRAM_ARGUMENTS&quot; value=&quot;start&quot;/>
+        &lt;stringAttribute key=&quot;org.eclipse.jdt.launching.VM_ARGUMENTS&quot; value=&quot;&quot; />
+        &lt;stringAttribute key=&quot;server-id&quot; value=&quot;${igloo.tomcat.server.id}&quot;/>
+        &lt;/launchConfiguration>
+      </content>
     </setupTask>
     <description>Tomcat</description>
   </setupTask>
