@@ -322,6 +322,10 @@
             xsi:type="setup:PreferenceTask"
             key="/instance/org.eclipse.jdt.ui/org.eclipse.jface.textfont"
             value="1|DejaVu Sans Mono|9.0|0|GTK|1|;"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.jdt.ui/content_assist_insert_completion"
+            value="true"/>
       </setupTask>
       <setupTask
           xsi:type="setup:CompoundTask"
