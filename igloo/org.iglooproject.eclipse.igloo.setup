@@ -342,6 +342,30 @@
             xsi:type="setup:PreferenceTask"
             key="/instance/org.eclipse.m2e.core/eclipse.m2.updateProjects"
             value="false"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.m2e.wtp/org.eclipse.m2e.wtp.ear.applicationXmlInBuilDir"
+            value="false"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.m2e.wtp/org.eclipse.m2e.wtp.enableM2eWtp"
+            value="true"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.m2e.wtp/org.eclipse.m2e.wtp.jaxrs.enabler.enabled"
+            value="false"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.m2e.wtp/org.eclipse.m2e.wtp.jpa.enabler.enabled"
+            value="false"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.m2e.wtp/org.eclipse.m2e.wtp.jsf.enabler.enabled"
+            value="false"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.m2e.wtp/org.eclipse.m2e.wtp.war.archiverFilesInBuilDir"
+            value="true"/>
       </setupTask>
       <setupTask
           xsi:type="setup:CompoundTask"
