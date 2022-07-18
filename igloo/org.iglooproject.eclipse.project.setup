@@ -226,15 +226,15 @@
       name="Java">
     <setupTask
         xsi:type="jdt:JRETask"
-        version="JavaSE-11"
-        location="/usr/lib/jvm/java-11"
-        name="OpenJDK 11"/>
-    <setupTask
-        xsi:type="jdt:JRETask"
         version="JavaSE-1.8"
         location="/usr/lib/jvm/java-1.8.0"
         name="OpenJDK 8"
         executionEnvironmentDefault="false"/>
+    <setupTask
+        xsi:type="jdt:JRETask"
+        version="JavaSE-11"
+        location="/usr/lib/jvm/java-11"
+        name="OpenJDK 11"/>
   </setupTask>
   <setupTask
       xsi:type="setup:CompoundTask"
@@ -263,9 +263,9 @@
           xsi:type="setup:CompoundTask"
           name="org.eclipse.debug">
         <setupTask
-          xsi:type="setup:PreferenceTask"
-          key="/instance/org.eclipse.jdt.debug/org.eclipse.jdt.debug.enable_advanced_sourcelookup"
-          value="false"/>
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.jdt.debug/org.eclipse.jdt.debug.enable_advanced_sourcelookup"
+            value="false"/>
       </setupTask>
       <setupTask
           xsi:type="setup:CompoundTask"
