@@ -537,6 +537,14 @@
             value="maven_execution"/>
       </setupTask>
       <setupTask
+          xsi:type="setup:CompoundTask"
+          name="org.eclipse.m2e.apt">
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.m2e.apt/org.eclipse.m2e.apt.mode"
+            value="maven_execution"/>
+      </setupTask>
+      <setupTask
           xsi:type="setup:ResourceCreationTask"
           force="true"
           targetURL="${workspace.location|uri}/.metadata/.plugins/org.eclipse.wst.xml.core/user_catalog.xml"
