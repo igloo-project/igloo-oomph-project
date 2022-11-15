@@ -219,6 +219,38 @@
       </setupTask>
       <description>Conditionally set igloo.tomcat.* variables (see filter attribute on folders)</description>
     </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        filter="(osgi.os=linux)"
+        name="jdk8.path"
+        value="/usr/lib/jvm/java-1.8.0"
+        label="jdk8.path / macos">
+      <description></description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        filter="(osgi.os=macosx)"
+        name="jdk8.path"
+        value="##DISABLED##"
+        label="jdk8.path / macos">
+      <description></description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        filter="(osgi.os=linux)"
+        name="jdk11.path"
+        value="/usr/lib/jvm/java-11"
+        label="jdk8.path / linux">
+      <description></description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        filter="(osgi.os=macosx)"
+        name="jdk11.path"
+        value="/Library/Java/JavaVirtualMachines/temurin-11.jdk/Contents/Home"
+        label="jdk8.path / macos">
+      <description></description>
+    </setupTask>
     <description>Variables</description>
   </setupTask>
   <setupTask
@@ -226,14 +258,15 @@
       name="Java">
     <setupTask
         xsi:type="jdt:JRETask"
+        filter="(osgi.os=linux)"
         version="JavaSE-1.8"
-        location="/usr/lib/jvm/java-1.8.0"
+        location="${jdk8.path}"
         name="OpenJDK 8"
         executionEnvironmentDefault="false"/>
     <setupTask
         xsi:type="jdt:JRETask"
         version="JavaSE-11"
-        location="/usr/lib/jvm/java-11"
+        location="${jdk11.path}"
         name="OpenJDK 11"/>
   </setupTask>
   <setupTask
