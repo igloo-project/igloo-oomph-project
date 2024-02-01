@@ -281,6 +281,20 @@
           label="JavaSE-17"/>
       <description>Tomcat runtime version</description>
     </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        name="code.formatter"
+        defaultValue="com.google.googlejavaformat.java.GoogleJavaFormatter"
+        storageURI="scope://Workspace"
+        label="Formatter">
+      <choice
+          value="com.google.googlejavaformat.java.GoogleJavaFormatter"
+          label="com.google.googlejavaformat.java.GoogleJavaFormatter"/>
+      <choice
+          value="org.eclipse.jdt.core.defaultJavaFormatter"
+          label="org.eclipse.jdt.core.defaultJavaFormatter"/>
+      <description>Formatter</description>
+    </setupTask>
     <description>Variables</description>
   </setupTask>
   <setupTask
@@ -370,6 +384,10 @@
             xsi:type="setup:PreferenceTask"
             key="/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.lineSplit"
             value="120"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.javaFormatter"
+            value="${code.formatter}"/>
       </setupTask>
       <setupTask
           xsi:type="setup:CompoundTask"
