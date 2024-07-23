@@ -8,8 +8,8 @@
     xmlns:maven="http://www.eclipse.org/oomph/setup/maven/1.0"
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
     xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/maven/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Maven.ecore"
-    name="org.iglooproject.eclipse.project (Igloo 5.x)"
-    label="Igloo project import">
+    name="org.iglooproject.eclipse.project"
+    label="Igloo project import (Igloo 5.x)">
   <setupTask
       xsi:type="setup:CompoundTask"
       id="group.variables"
