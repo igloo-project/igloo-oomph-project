@@ -4,86 +4,93 @@
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
+    xmlns:jdt="http://www.eclipse.org/oomph/setup/jdt/1.0"
     xmlns:maven="http://www.eclipse.org/oomph/setup/maven/1.0"
-    xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
-    xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/maven/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Maven.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
-    name="org.iglooproject.eclipse.igloo6"
-    label="Igloo 6.x development">
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/maven/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Maven.ecore"
+    name="org.iglooproject.eclipse.project6"
+    label="Igloo project import (Igloo 6.x)">
   <setupTask
       xsi:type="setup:CompoundTask"
       id="group.variables"
       name="Variables">
     <setupTask
         xsi:type="setup:VariableTask"
-        name="git.maven.project.name"
-        value="igloo-maven"
+        name="git.project.name"
         storageURI="scope://Workspace"
-        label="Nom du projet git">
-      <description>Nom du projet (correspond à la dernière partie du chemin dans l'url du dépôt)</description>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:VariableTask"
-        name="git.commons.project.name"
-        value="igloo-commons"
-        storageURI="scope://Workspace"
-        label="Nom du projet git">
-      <description>Nom du projet (correspond à la dernière partie du chemin dans l'url du dépôt)</description>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:VariableTask"
-        name="git.parent.project.name"
-        value="igloo-parent"
-        storageURI="scope://Workspace"
-        label="Nom du projet git">
-      <description>Nom du projet (correspond à la dernière partie du chemin dans l'url du dépôt)</description>
+        label="Git project name">
+      <description>This is the last part in the git url (e.g. *project* for *git@github.com:igloo-project/my-project.git*)</description>
     </setupTask>
     <setupTask
         xsi:type="setup:VariableTask"
         name="repository.choice"
-        value="git@github.com:igloo-project"
+        defaultValue="git@github.com:igloo-project/$${git.project.name}.git"
         storageURI="scope://Workspace"
-        label="Url du dépôt">
-      <description>Url du dépôt</description>
+        label="Git URL">
+      <description>Full Git URL, e.g. git@github.com:igloo-project/my-project.git</description>
     </setupTask>
     <setupTask
         xsi:type="setup:VariableTask"
-        name="git.maven.clone.name"
-        defaultValue="igloo-maven"
+        name="git.clone.name"
+        defaultValue="${git.project.name}"
         storageURI="scope://Workspace"
-        label="Nom du clone git (igloo-maven)">
-      <description>Nom du répertoire de clone git (igloo-maven) (dans ${user.home}/git)</description>
+        label="Clone folder name">
+      <description>e.g. my-project; change it if you want to manage several clone of the same project, or if there is a name conflict</description>
     </setupTask>
     <setupTask
         xsi:type="setup:VariableTask"
-        name="git.commons.clone.name"
-        defaultValue="igloo-commons"
+        name="maven.project.name"
+        defaultValue="$${git.project.name}"
         storageURI="scope://Workspace"
-        label="Nom du clone git (igloo-commons)">
-      <description>Nom du répertoire de clone git (igloo-commons) (dans ${user.home}/git)</description>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:VariableTask"
-        name="git.parent.clone.name"
-        defaultValue="igloo-parent"
-        storageURI="scope://Workspace"
-        label="Nom du clone git (igloo-parent)">
-      <description>Nom du répertoire de clone git (igloo-parent) (dans ${user.home}/git)</description>
+        label="Maven root artifactId">
+      <description>Overrides this if the root artifactId is not the git repository name</description>
     </setupTask>
     <setupTask
         xsi:type="setup:VariableTask"
         name="git.clone.branch"
-        defaultValue="igloo-boot-dev"
+        defaultValue="master"
         storageURI="scope://Workspace"
-        label="Branche">
-      <description>Branche</description>
+        label="Targetted git branch">
+      <description>This branch is used only when repository is cloned; existing clone is not switched</description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        filter="(osgi.os=linux)"
+        name="jdk17.path"
+        value="/usr/lib/jvm/java-17"
+        label="jdk8.path / linux">
+      <description></description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        filter="(osgi.os=macosx)"
+        name="jdk17.path"
+        value="/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home"
+        label="jdk8.path / macos">
+      <description></description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        name="runtime.jvm"
+        defaultValue="JavaSE-17"
+        storageURI="scope://Workspace"
+        label="Tomcat runtime version">
+      <choice
+          value="JavaSE-17"
+          label="JavaSE-17"/>
+      <description>Tomcat runtime version</description>
     </setupTask>
     <description>Variables</description>
   </setupTask>
   <setupTask
       xsi:type="setup:CompoundTask"
-      name="Java"/>
+      name="Java">
+    <setupTask
+        xsi:type="jdt:JRETask"
+        version="JavaSE-17"
+        location="${jdk17.path}"
+        name="OpenJDK 17"/>
+  </setupTask>
   <setupTask
       xsi:type="setup:CompoundTask"
       id="group.preferences"
@@ -184,6 +191,10 @@
             value="true"/>
         <setupTask
             xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.jdt.ui/content_assist_insert_completion"
+            value="true"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
             key="/instance/org.eclipse.jdt.ui/org.eclipse.jdt.ui.importorder"
             value=""/>
         <setupTask
@@ -221,7 +232,7 @@
         <setupTask
             xsi:type="setup:PreferenceTask"
             key="/instance/org.eclipse.m2e.core/eclipse.m2.updateProjects"
-            value="false"/>
+            value="true"/>
         <setupTask
             xsi:type="setup:PreferenceTask"
             key="/instance/org.eclipse.m2e.wtp/org.eclipse.m2e.wtp.ear.applicationXmlInBuilDir"
@@ -285,7 +296,7 @@
         <setupTask
             xsi:type="setup:PreferenceTask"
             key="/instance/org.eclipse.ui.ide/WORKSPACE_NAME"
-            value="${git.parent.clone.name}"/>
+            value="${git.clone.name}"/>
       </setupTask>
       <setupTask
           xsi:type="setup:CompoundTask"
@@ -419,48 +430,8 @@
     <setupTask
         xsi:type="git:GitCloneTask"
         id="git.clone.org.iglooproject.eclipse.project"
-        location="${user.home}/git/${git.maven.clone.name}"
-        remoteURI="${repository.choice}/igloo-maven"
-        pushURI=""
-        checkoutBranch="${git.clone.branch}">
-      <annotation
-          source="http://www.eclipse.org/oomph/setup/InducedChoices">
-        <detail
-            key="inherit">
-          <value>eclipse.git.remoteURIs</value>
-        </detail>
-        <detail
-            key="label">
-          <value>${scope.project.label} Git repository</value>
-        </detail>
-      </annotation>
-      <description>${scope.project.label}</description>
-    </setupTask>
-    <setupTask
-        xsi:type="git:GitCloneTask"
-        id="git.clone.org.iglooproject.eclipse.project"
-        location="${user.home}/git/${git.commons.clone.name}"
-        remoteURI="${repository.choice}/igloo-commons"
-        pushURI=""
-        checkoutBranch="${git.clone.branch}">
-      <annotation
-          source="http://www.eclipse.org/oomph/setup/InducedChoices">
-        <detail
-            key="inherit">
-          <value>eclipse.git.remoteURIs</value>
-        </detail>
-        <detail
-            key="label">
-          <value>${scope.project.label} Git repository</value>
-        </detail>
-      </annotation>
-      <description>${scope.project.label}</description>
-    </setupTask>
-    <setupTask
-        xsi:type="git:GitCloneTask"
-        id="git.clone.org.iglooproject.eclipse.project"
-        location="${user.home}/git/${git.parent.clone.name}"
-        remoteURI="${repository.choice}/igloo-parent"
+        location="${user.home}/git/${git.clone.name}"
+        remoteURI="${repository.choice}"
         pushURI=""
         checkoutBranch="${git.clone.branch}">
       <annotation
@@ -480,94 +451,11 @@
         xsi:type="maven:MavenImportTask"
         projectNameTemplate="">
       <sourceLocator
-          rootFolder="${user.home}/git/${git.maven.clone.name}"
-          locateNestedProjects="true"/>
-      <description></description>
-    </setupTask>
-    <setupTask
-        xsi:type="maven:MavenImportTask"
-        projectNameTemplate="">
-      <sourceLocator
-          rootFolder="${user.home}/git/${git.commons.clone.name}"
-          locateNestedProjects="true"/>
-      <description></description>
-    </setupTask>
-    <setupTask
-        xsi:type="maven:MavenImportTask"
-        projectNameTemplate="">
-      <sourceLocator
-          rootFolder="${user.home}/git/${git.parent.clone.name}"
+          rootFolder="${user.home}/git/${git.clone.name}"
           locateNestedProjects="true"/>
       <description></description>
     </setupTask>
     <description>Git</description>
-  </setupTask>
-  <setupTask
-      xsi:type="setup.workingsets:WorkingSetTask"
-      id="workingsets">
-    <workingSet
-        name="Components"
-        id="workingset.components">
-      <predicate
-          xsi:type="predicates:LocationPredicate"
-          pattern=".*/igloo-components.*"/>
-    </workingSet>
-    <workingSet
-        name="Basic application"
-        id="workingset.basicapplication">
-      <predicate
-          xsi:type="predicates:LocationPredicate"
-          pattern=".*/basic-application.*"/>
-    </workingSet>
-    <workingSet
-        name="Packages"
-        id="workingset.packages">
-      <predicate
-          xsi:type="predicates:LocationPredicate"
-          pattern=".*/igloo-packages.*"/>
-    </workingSet>
-    <workingSet
-        name="Dependencies"
-        id="workingset.dependencies">
-      <predicate
-          xsi:type="predicates:LocationPredicate"
-          pattern=".*/igloo-dependencies.*"/>
-    </workingSet>
-    <workingSet
-        name="Maven"
-        id="workingset.maven">
-      <predicate
-          xsi:type="predicates:LocationPredicate"
-          pattern=".*/igloo-parents.*"/>
-    </workingSet>
-    <workingSet
-        name="Components (JPA)"
-        id="workingset.componentsjpa">
-      <predicate
-          xsi:type="predicates:LocationPredicate"
-          pattern=".*/igloo-component-jpa.*"/>
-    </workingSet>
-    <workingSet
-        name="Components (Wicket)"
-        id="workingset.componentswicket">
-      <predicate
-          xsi:type="predicates:LocationPredicate"
-          pattern=".*/igloo-component-wicket.*"/>
-    </workingSet>
-    <workingSet
-        name="Webjars"
-        id="workingset.webjars">
-      <predicate
-          xsi:type="predicates:LocationPredicate"
-          pattern=".*/igloo-webjars.*"/>
-    </workingSet>
-    <workingSet
-        name="Integration"
-        id="workingset.integration">
-      <predicate
-          xsi:type="predicates:LocationPredicate"
-          pattern=".*/igloo-integration.*"/>
-    </workingSet>
   </setupTask>
   <stream name="master"
       label="Master"/>
