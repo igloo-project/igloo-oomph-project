@@ -10,7 +10,7 @@
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
     xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/maven/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Maven.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
     name="org.iglooproject.eclipse.igloo6"
-    label="Igloo 6.x development">
+    label="Igloo development (Igloo 6.x)">
   <setupTask
       xsi:type="setup:CompoundTask"
       id="group.variables"
