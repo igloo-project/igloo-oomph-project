@@ -222,22 +222,6 @@
     <setupTask
         xsi:type="setup:VariableTask"
         filter="(osgi.os=linux)"
-        name="jdk8.path"
-        value="/usr/lib/jvm/java-1.8.0"
-        label="jdk8.path / macos">
-      <description></description>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:VariableTask"
-        filter="(osgi.os=macosx)"
-        name="jdk8.path"
-        value="##DISABLED##"
-        label="jdk8.path / macos">
-      <description></description>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:VariableTask"
-        filter="(osgi.os=linux)"
         name="jdk11.path"
         value="/usr/lib/jvm/java-11"
         label="jdk8.path / linux">
@@ -286,13 +270,6 @@
   <setupTask
       xsi:type="setup:CompoundTask"
       name="Java">
-    <setupTask
-        xsi:type="jdt:JRETask"
-        filter="(osgi.os=linux)"
-        version="JavaSE-1.8"
-        location="${jdk8.path}"
-        name="OpenJDK 8"
-        executionEnvironmentDefault="false"/>
     <setupTask
         xsi:type="jdt:JRETask"
         version="JavaSE-11"
