@@ -58,7 +58,7 @@
         filter="(osgi.os=linux)"
         name="jdk17.path"
         value="/usr/lib/jvm/java-17"
-        label="jdk8.path / linux">
+        label="jdk17.path / linux">
       <description></description>
     </setupTask>
     <setupTask
@@ -66,19 +66,40 @@
         filter="(osgi.os=macosx)"
         name="jdk17.path"
         value="/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home"
-        label="jdk8.path / macos">
+        label="jdk17.path / macos">
       <description></description>
     </setupTask>
     <setupTask
         xsi:type="setup:VariableTask"
-        name="runtime.jvm"
-        defaultValue="JavaSE-17"
-        storageURI="scope://Workspace"
-        label="Tomcat runtime version">
-      <choice
-          value="JavaSE-17"
-          label="JavaSE-17"/>
-      <description>Tomcat runtime version</description>
+        filter="(osgi.os=linux)"
+        name="jdk21.path"
+        value="/usr/lib/jvm/temurin-21-jdk"
+        label="jdk21.path / linux">
+      <description></description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        filter="(osgi.os=macosx)"
+        name="jdk21.path"
+        value="/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home"
+        label="jdk21.path / macos">
+      <description></description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        filter="(osgi.os=linux)"
+        name="jdk25.path"
+        value="/usr/lib/jvm/temurin-25-jdk"
+        label="jdk25.path / linux">
+      <description></description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        filter="(osgi.os=macosx)"
+        name="jdk25.path"
+        value="/Library/Java/JavaVirtualMachines/temurin-25.jdk/Contents/Home"
+        label="jdk25.path / macos">
+      <description></description>
     </setupTask>
     <description>Variables</description>
   </setupTask>
@@ -90,6 +111,16 @@
         version="JavaSE-17"
         location="${jdk17.path}"
         name="OpenJDK 17"/>
+    <setupTask
+        xsi:type="jdt:JRETask"
+        version="JavaSE-21"
+        location="${jdk21.path}"
+        name="OpenJDK 21"/>
+    <setupTask
+        xsi:type="jdt:JRETask"
+        version="JavaSE-25"
+        location="${jdk25.path}"
+        name="OpenJDK 25"/>
   </setupTask>
   <setupTask
       xsi:type="setup:CompoundTask"

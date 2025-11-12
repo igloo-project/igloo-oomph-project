@@ -4,11 +4,12 @@
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
+    xmlns:jdt="http://www.eclipse.org/oomph/setup/jdt/1.0"
     xmlns:maven="http://www.eclipse.org/oomph/setup/maven/1.0"
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/maven/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Maven.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/JDT.ecore http://www.eclipse.org/oomph/setup/maven/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Maven.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
     name="org.iglooproject.eclipse.igloo6"
     label="Igloo development (Igloo 6.x)">
   <setupTask
@@ -79,11 +80,75 @@
         label="Branche">
       <description>Branche</description>
     </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        filter="(osgi.os=linux)"
+        name="jdk17.path"
+        value="/usr/lib/jvm/java-17"
+        label="jdk17.path / linux">
+      <description></description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        filter="(osgi.os=macosx)"
+        name="jdk17.path"
+        value="/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home"
+        label="jdk17.path / macos">
+      <description></description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        filter="(osgi.os=linux)"
+        name="jdk21.path"
+        value="/usr/lib/jvm/temurin-21-jdk"
+        label="jdk21.path / linux">
+      <description></description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        filter="(osgi.os=macosx)"
+        name="jdk21.path"
+        value="/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home"
+        label="jdk21.path / macos">
+      <description></description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        filter="(osgi.os=linux)"
+        name="jdk25.path"
+        value="/usr/lib/jvm/temurin-25-jdk"
+        label="jdk25.path / linux">
+      <description></description>
+    </setupTask>
+    <setupTask
+        xsi:type="setup:VariableTask"
+        filter="(osgi.os=macosx)"
+        name="jdk25.path"
+        value="/Library/Java/JavaVirtualMachines/temurin-25.jdk/Contents/Home"
+        label="jdk25.path / macos">
+      <description></description>
+    </setupTask>
     <description>Variables</description>
   </setupTask>
   <setupTask
       xsi:type="setup:CompoundTask"
-      name="Java"/>
+      name="Java">
+    <setupTask
+        xsi:type="jdt:JRETask"
+        version="JavaSE-17"
+        location="${jdk17.path}"
+        name="OpenJDK 17"/>
+    <setupTask
+        xsi:type="jdt:JRETask"
+        version="JavaSE-21"
+        location="${jdk21.path}"
+        name="OpenJDK 21"/>
+    <setupTask
+        xsi:type="jdt:JRETask"
+        version="JavaSE-25"
+        location="${jdk25.path}"
+        name="OpenJDK 25"/>
+  </setupTask>
   <setupTask
       xsi:type="setup:CompoundTask"
       id="group.preferences"
