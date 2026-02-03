@@ -48,7 +48,7 @@
     <setupTask
         xsi:type="setup:VariableTask"
         name="git.clone.branch"
-        defaultValue="master"
+        defaultValue="dev"
         storageURI="scope://Workspace"
         label="Targetted git branch">
       <description>This branch is used only when repository is cloned; existing clone is not switched</description>

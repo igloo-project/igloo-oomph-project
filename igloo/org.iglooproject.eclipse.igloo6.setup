@@ -75,7 +75,7 @@
     <setupTask
         xsi:type="setup:VariableTask"
         name="git.clone.branch"
-        defaultValue="igloo-boot-dev"
+        defaultValue="dev"
         storageURI="scope://Workspace"
         label="Branche">
       <description>Branche</description>
