@@ -385,6 +385,14 @@
             value=""/>
         <setupTask
             xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.jdt.ui/org.eclipse.jdt.ui.ondemandthreshold"
+            value="999"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
+            key="/instance/org.eclipse.jdt.ui/org.eclipse.jdt.ui.staticondemandthreshold"
+            value="999"/>
+        <setupTask
+            xsi:type="setup:PreferenceTask"
             key="/instance/org.eclipse.jdt.ui/editor_save_participant_org.eclipse.jdt.ui.postsavelistener.cleanup"
             value="true"/>
         <setupTask
