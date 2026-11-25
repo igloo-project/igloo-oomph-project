@@ -72,22 +72,6 @@
     <setupTask
         xsi:type="setup:VariableTask"
         filter="(osgi.os=linux)"
-        name="jdk21.path"
-        value="/usr/lib/jvm/temurin-21-jdk"
-        label="jdk21.path / linux">
-      <description></description>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:VariableTask"
-        filter="(osgi.os=macosx)"
-        name="jdk21.path"
-        value="/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home"
-        label="jdk21.path / macos">
-      <description></description>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:VariableTask"
-        filter="(osgi.os=linux)"
         name="jdk25.path"
         value="/usr/lib/jvm/temurin-25-jdk"
         label="jdk25.path / linux">
@@ -111,11 +95,6 @@
         version="JavaSE-17"
         location="${jdk17.path}"
         name="OpenJDK 17"/>
-    <setupTask
-        xsi:type="jdt:JRETask"
-        version="JavaSE-21"
-        location="${jdk21.path}"
-        name="OpenJDK 21"/>
     <setupTask
         xsi:type="jdt:JRETask"
         version="JavaSE-25"
